@@ -1,0 +1,73 @@
+html, body, #cesiumContainer {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    color:white;
+    font-family: "Helvetica Neue",Helvetica,Tahoma,Arial,"Microsoft Yahei","Hiragino Sans GB","WenQuanYi Micro Hei",sans-serif;
+    font-size: 14px;
+}
+#mytoolbar{
+    z-index: 1;
+    right: 10px;
+    /* background-color: white; */
+    height: 36px;
+    width: 200px;
+    margin: 5px 5px 5px 8px;
+    float: right;
+    position: absolute;
+    /* display: inline-block; */
+    /* vertical-align: middle; */
+    background: rgba(238, 234, 234, 0.8);
+    padding: 4px;
+    border-radius: 4px;
+    display: block;
+}
+#mytoolbar a {
+    padding: 0;
+    text-decoration: none;
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    cursor: pointer;
+    float: left;
+    /* display: inline; */
+    margin-right: 5px;
+    cursor: pointer;
+    text-align: center;
+    background: rgba(0,0,0,.4);
+    border-radius: 50%;
+    cursor: pointer;
+    color: #fff;
+}
+#toolbar {
+    z-index: 1;
+    position: relative;
+    display: block;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+.smicon-compass{
+    size: 32px;
+    height: 32px;
+    width: 32px;
+}
+/* 指北针 
+#btnCompass{
+    width : 32px;
+    height : 32px;
+    border-radius : 32px;
+    padding : 5px 8px;
+}
+#compass {
+    position: absolute;
+    right: 5px;
+    top: 10px;
+    width: 32px;
+    height: 32px;
+    margin-left: 0px;
+    transform: rotate(-360deg);
+    display: inline-block;
+}*/

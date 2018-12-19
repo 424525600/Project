@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <title>Tools-06GroundPush</title>
+    <script src="../../Cesium1.22/Cesium/Cesium.js"></script>
+    <script type="text/javascript" src="./Libs/GroundPush/GroundPushGlobeSurfaceShaderSet.js"></script>
+    <script type="text/javascript" src="./Libs/GroundPush/GroundPushGlobeVS.js"></script>
+    <script type="text/javascript" src="./Libs/GroundPush/GroundPushGlobeFS.js"></script>
+    <script type="text/javascript" src="./Libs/GroundPush/GroundPush.js"></script>
+    <style>
+        @import url(../Cesium/Widgets/widgets.css);
+
+        html, body, #cesiumContainer {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div id="cesiumContainer" class="fullWindow"></div>
+    <script type="text/javascript">
+        var lat = 42.006; // Sydney
+        var lon = 128.055;
+        var width = 0.02;
+        var pushRectangle = new Cesium.Rectangle(
+            Cesium.Math.toRadians(lon),
+            Cesium.Math.toRadians(lat - width),
+            Cesium.Math.toRadians(lon + 2 * width),
+            Cesium.Math.toRadians(lat + width)
+        );
+        var pushDepth = 2550;
+        options = {
+            pushRectangle: pushRectangle,
+            pushDepth: pushDepth,
+            pushSidesTint: new Cesium.Cartesian3(0.7, 0.6, 0.5)
+        };
+        // Initialise the ground push.
+        var gp = new GroundPush(Cesium, options);
+
+        var imageryProvider = new Cesium.WebMapTileServiceImageryProvider({
+            url: 'http://t0.tianditu.com/img_w/wmts?',
+            layer: 'img',
+            style: 'default',
+            format: 'tiles',
+            tileMatrixSetID: 'w',
+            credit: new Cesium.Credit('天地图全球影像服务'),
+            maximumLevel: 18
+        });
+        // url: './terrain/beijing30m/'
+        var terrainProvider = new Cesium.CesiumTerrainProvider({
+            url: './sampledata/terrain/ctb-merger/'
+        });
+        var viewer = new Cesium.Viewer('cesiumContainer', {
+            //skyBox: false,
+            //skyAtmosphere: false,
+            imageryProvider: imageryProvider,
+            contextOptions: {
+                webgl: {
+                    alpha: true
+                }
+            },
+            terrainProvider: terrainProvider,
+            //creditContainer: "creditContainer",
+            selectionIndicator: false,
+            animation: false,
+            baseLayerPicker: false,
+            geocoder: false,
+            timeline: false,
+            sceneModePicker: true,
+            navigationHelpButton: false,
+            infoBox: false,
+            fullscreenButton: true
+        });
+
+        var cesiumWidget = viewer.cesiumWidget;
+         
+        // Set the camera to view the push rectangle.
+        cesiumWidget.scene.camera.viewRectangle(pushRectangle);
+    </script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>hello</title>
+		<script src="./Build/Cesium/Cesium.js"></script>
+		<!-- <script src="./ThirdParty/requirejs-2.1.20/require.js"></script> -->
+		<script src="./ThirdParty/viewerCesiumNavigationMixin.min.js"></script>
+		<script src="ThirdParty/jquery-1.11.2.min.js"></script>
+		<script src="./ThirdParty/jquery.ztree.core.js"></script>
+		<script src="./ThirdParty/jquery.ztree.all.min.js"></script>
+		<link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
+		<link href="./Build/Cesium/Widgets/widgets.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css"    href="./css/zTreeStyle.css" />
+		<link rel="stylesheet" type="text/css"    href="./css/common.css" />
+		<style>
+		    /* @import url(./templates/bucket.css); */
+		    #toolbar {
+		        background: rgba(42, 42, 42, 0.8);
+		        padding: 4px;
+		        border-radius: 4px;
+		    }
+		    #toolbar input {
+		        vertical-align: middle;
+		        padding-top: 2px;
+		        padding-bottom: 2px;
+		    }
+		    #toolbar .header {
+		        font-weight: bold;
+		    }
+		</style>
+	</head>
+	<body>
+		<div id="cesiumContainer" class="fullSize">
+			<div id="mytoolbar" class="btn-group" >
+				<a title="回到默认区域" class="btn btn-inverse " onclick="newMonitore.showMonitore();">
+					<img src="./images/img/webcam.png" class="smicon-compass"></img>
+				</a>
+				<a data-toggle="dropdown" id="baseLayerBtn" title="底图设置" class="btn btn-inverse" aria-expanded="false">
+					<span class="fa fa-map"></span>
+				</a>
+				<a title="图层管理" class="btn btn-inverse widget-btn" data-widget="widgets/manageLayers/widget.js">
+					<span class="fa fa-tasks"></span>
+				</a>
+				<a data-toggle="dropdown" title="空间分析(基于SM)" class="btn btn-inverse" aria-expanded="false">
+					<span class="fa fa-magic"></span>
+					<div class="dropDown-container measureDropDown">
+				</a>
+			</div>
+		</div>
+		
+		
+
+		<!-- <div>
+			<a id="btnCompass" title="罗盘" class="btn btn-inverse">
+				<img id="compass" src="./images/zhinanzhen.png" class="smicon-compass"></img></a>
+		</div> -->
+		<div id="toolbar" >
+			<!-- <button id="jiance" >监测点</button> -->
+			<!-- <select data-bind="options: exampleTypes, value: currentExampleType"></select> -->
+			<input type="checkbox" value="false" data-bind="checked: debugBoundingVolumesEnabled, valueUpdate: 'input'"> 包围盒
+		    <input type="checkbox" value="true" data-bind="checked: edgeStylingEnabled, valueUpdate: 'input'"> 边界
+		    <input type="checkbox" value="false" data-bind="checked: showPlane, valueUpdate: 'input'"> 剖面
+			
+		</div>
+		<!-- <video id="trailer0" style="visibility: hidden" muted autoplay loop crossorigin controls>
+			<source src="https://cesiumjs.org/videos/Sandcastle/big-buck-bunny_trailer.mp4" type="video/mp4">
+			Your browser does not support the <code>video</code> element.
+		</video>
+		<video id="trailer1" style="visibility: hidden" muted autoplay loop crossorigin controls>
+			<source src=" " type="video/mp4">
+			Your browser does not support the <code>video</code> element.
+		</video>
+		<video id="trailer2" style="visibility: hidden" muted autoplay loop crossorigin controls>
+			<source src=" " type="video/mp4">
+			Your browser does not support the <code>video</code> element.
+		</video>
+		<video id="trailer3" style="visibility: hidden" muted autoplay loop crossorigin controls>
+			<source src=" " type="video/mp4">
+			Your browser does not support the <code>video</code> element.
+		</video> -->
+		
+		
+	<script src="./data/data.js"></script>
+	<script src="./js/main.js"></script>
+	<script src="./js/layercontrol.js"></script>
+	
+	<script src="./js/common.js"></script>
+	<script src="./js/createTileset.js"></script>
+	<script src="./js/monitore.js"></script>
+	<script src="./js/imagelayers.js"></script>
+	<script type="text/javascript">
+		//初始化图层构建
+		//在serviceLayer.js中实现图层服务的读取，结果resu。传到layercontrol.js中实现图层树的构建
+		getLayersInfoCompleted(resu);
+	</script>
+	
+	
+	</body>
+	
+</html>

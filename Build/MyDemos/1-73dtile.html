@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <title>Cesium学习笔记11--模型加载--3dtile</title>
+    <link href="../Cesium/Widgets/widgets.css" rel="stylesheet" />
+    <script src="../Cesium/Cesium.js"></script>
+    <style>
+        html, body, #cesiumContainer {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="cesiumContainer" class="fullSize"></div>
+    <div id="creditContainer" style="display: none;"></div>
+
+    <script>
+   var fixGltf = function(gltf) {
+    if (!gltf.extensionsUsed) {
+        return;
+    }
+
+    var v = gltf.extensionsUsed.indexOf('KHR_technique_webgl');
+    var t = gltf.extensionsRequired.indexOf('KHR_technique_webgl');
+    // 中招了。。
+    if (v !== -1) {
+        gltf.extensionsRequired.splice(t, 1, 'KHR_techniques_webgl');
+        gltf.extensionsUsed.splice(v, 1, 'KHR_techniques_webgl');
+        gltf.extensions = gltf.extensions || {};
+        gltf.extensions['KHR_techniques_webgl'] = {};
+        gltf.extensions['KHR_techniques_webgl'].programs = gltf.programs;
+        gltf.extensions['KHR_techniques_webgl'].shaders = gltf.shaders;
+        gltf.extensions['KHR_techniques_webgl'].techniques = gltf.techniques;
+        var techniques = gltf.extensions['KHR_techniques_webgl'].techniques;
+
+        gltf.materials.forEach(function (mat, index) {
+            gltf.materials[index].extensions['KHR_technique_webgl'].values = gltf.materials[index].values;
+            gltf.materials[index].extensions['KHR_techniques_webgl'] = gltf.materials[index].extensions['KHR_technique_webgl'];
+
+            var vtxfMaterialExtension = gltf.materials[index].extensions['KHR_techniques_webgl'];
+
+            for (var value in vtxfMaterialExtension.values) {
+                var us = techniques[vtxfMaterialExtension.technique].uniforms;
+                for (var key in us) {
+                    if (us[key] === value) {
+                        vtxfMaterialExtension.values[key] = vtxfMaterialExtension.values[value];
+                        delete vtxfMaterialExtension.values[value];
+                        break;
+                    }
+                }
+            };
+        });
+
+        techniques.forEach(function (t) {
+            for (var attribute in t.attributes) {
+                var name = t.attributes[attribute];
+                t.attributes[attribute] = t.parameters[name];
+            };
+
+            for (var uniform in t.uniforms) {
+                var name = t.uniforms[uniform];
+                t.uniforms[uniform] = t.parameters[name];
+            };
+        });
+    }
+}
+
+Object.defineProperties(Cesium.Model.prototype, {
+    _cachedGltf: {
+        set: function (value) {
+            this._vtxf_cachedGltf = value;
+            if (this._vtxf_cachedGltf && this._vtxf_cachedGltf._gltf) {
+                fixGltf(this._vtxf_cachedGltf._gltf);
+            }
+        },
+        get: function () {
+            return this._vtxf_cachedGltf;
+        }
+    }
+});
+
+
+
+    var viewer = new Cesium.Viewer('cesiumContainer', {
+        selectionIndicator: false,
+        animation: false,  //是否显示动画控件
+        baseLayerPicker: false, //是否显示图层选择控件
+        geocoder: false, //是否显示地名查找控件
+        timeline: false, //是否显示时间线控件
+        sceneModePicker: true, //是否显示投影方式控件
+        navigationHelpButton: false, //是否显示帮助信息控件
+        infoBox: false,  //是否显示点击要素之后显示的信息
+        fullscreenButton: true
+    });
+    viewer.scene.globe.depthTestAgainstTerrain = true;
+
+    //取消双击事件
+    viewer.cesiumWidget.screenSpaceEventHandler.removeInputAction(Cesium.ScreenSpaceEventType.LEFT_DOUBLE_CLICK);
+    // 单击选择对象
+    var handlerEntity = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);    
+    handlerEntity.setInputAction(function (movement) {
+        var pickedObject = viewer.scene.pick(movement.position);
+        if (Cesium.defined(pickedObject)) {
+            debugger;
+            console.log(pickedObject);
+           
+        }
+    }, Cesium.ScreenSpaceEventType.LEFT_DOWN); 
+
+
+    var tileset = new Cesium.Cesium3DTileset({ url: "../../data/result2/tileset.json" });
+    viewer.scene.primitives.add(tileset);
+    viewer.zoomTo(tileset);
+    // debugger;
+    tileset.readyPromise.then(function (tileset) {
+            var cartographic = Cesium.Cartographic.fromCartesian(tileset.boundingSphere.center);
+            var surface = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, 0.0);
+            var offset = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, -0);
+            var translation = Cesium.Cartesian3.subtract(offset, surface, new Cesium.Cartesian3());
+            tileset.modelMatrix = Cesium.Matrix4.fromTranslation(translation);
+        }).otherwise(function (error) {
+            console.log(error);
+        });
+    
+
+    </script>
+</body>
+</html>
