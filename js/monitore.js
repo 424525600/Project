@@ -511,17 +511,4 @@ var xialakuang = $(".xialaan");
             $("#monitore").show();
         // }        
     });
-    //  let imgUrl = 'images/Cesium_Logo_Color_Overlay.png';
-    //  let position =positions[0];debugger;
-    // var addEntity = viewer.entities.add({
-    //     name: "1号监测点",
-    //     position: position,
-    //     billboard: {
-    //         id: "id",
-    //         show: true,
-    //         // scale: 1.0,
-    //         // sizeInMeters: true,
-    //         image: imgUrl,
-    //         distanceDisplayCondition: 3000
-    //     }
-    // });
+    
