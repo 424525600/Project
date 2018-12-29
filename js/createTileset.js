@@ -235,7 +235,7 @@ function loadModel(url) {
         edgeWidth : viewModel.edgeStylingEnabled ? 1.0 : 0.0
     });
 
-    var position = Cesium.Cartesian3.fromDegrees(-123.0744619, 44.0503706, 100.0);
+    var position = Cesium.Cartesian3.fromDegrees(108.0744619, 32.0503706, 100.0);
     var heading = Cesium.Math.toRadians(135.0);
     var pitch = 0.0;
     var roll = 0.0;

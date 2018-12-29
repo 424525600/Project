@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>hello</title>
+		<title>Project</title>
 		<script src="./Build/Cesium/Cesium.js"></script>
 		<!-- <script src="./ThirdParty/requirejs-2.1.20/require.js"></script> -->
 		<script src="./ThirdParty/viewerCesiumNavigationMixin.min.js"></script>
@@ -32,23 +32,97 @@
 	</head>
 	<body>
 		<div id="cesiumContainer" class="fullSize">
+			<div id="info"></div>
 			<div id="mytoolbar" class="btn-group" >
-				<a title="回到默认区域" class="btn btn-inverse " onclick="newMonitore.showMonitore();">
+				<a title="监测点" class="btn btn-inverse " onclick="newMonitore.showMonitore();">
 					<img src="./images/img/webcam.png" class="smicon-compass"></img>
 				</a>
-				<a data-toggle="dropdown" id="baseLayerBtn" title="底图设置" class="btn btn-inverse" aria-expanded="false">
+				<a data-toggle="dropdown" id="baseLayerBtn" title=" " class="btn btn-inverse" aria-expanded="false">
 					<span class="fa fa-map"></span>
 				</a>
-				<a title="图层管理" class="btn btn-inverse widget-btn" data-widget="widgets/manageLayers/widget.js">
+				<a title=" " class="btn btn-inverse widget-btn" data-widget="widgets/manageLayers/widget.js">
 					<span class="fa fa-tasks"></span>
 				</a>
-				<a data-toggle="dropdown" title="空间分析(基于SM)" class="btn btn-inverse" aria-expanded="false">
+				<a data-toggle="dropdown" title=" " class="btn btn-inverse" aria-expanded="false">
 					<span class="fa fa-magic"></span>
 					<div class="dropDown-container measureDropDown">
 				</a>
 			</div>
 		</div>
-		
+		<div id="jiancedian_infoDiv" style="display: none;">
+			<span class="titleInfo_right" id="jiancedian_infoClose"><a title="关闭窗口">X</a></span>
+			<div class="content1_div" style="padding-top: 20px;">
+				<div class="left">预警分类:</div>
+				<div class="right" style="position: relative;">
+					<input type="text" name="" id="" readonly value="巡视预警" class="right_select" />
+					<span style="position: absolute;right: 18px;top: 2px;font-size: 10px; color: #a4bed4;" class="xialaan icon-icon09 iconfont"></span>
+					<div class="xiala_div" style="position: absolute;line-height: 20px;">
+						<input type="text" class="xiala_input" readonly name="" id="" value="巡视预警" />
+						<input type="text" class="xiala_input" readonly name="" id="" value="监测预警" />
+						<input type="text" class="xiala_input" readonly name="" id="" value="综合预警" />
+					</div>
+				</div>
+			</div>
+			<div class="content1_div">
+				<div class="left">
+					预警级别：
+				</div>
+				<div class="right" style="position: relative;">
+					<input type="text" name="" id="" readonly value="正常" class="right_select" />
+					<span style="position: absolute;right: 18px;top: 2px;font-size: 10px; color: #a4bed4;" class="xialaan icon-icon09 iconfont"></span>
+					<div class="xiala_div" style="position: absolute;line-height: 20px;">
+						<input type="text" class="xiala_input" readonly name="" id="" value="正常" />
+						<input type="text" class="xiala_input" readonly name="" id="" value="黄色预警" />
+						<input type="text" class="xiala_input" readonly name="" id="" value="橙色预警" />
+						<input type="text" class="xiala_input" readonly name="" id="" value="红色预警" />
+					</div>
+				</div>
+			</div>
+			<div class="content1_div">
+				<div class="left">
+					测点编码：
+				</div>
+				<div class="right" style="position: relative;">
+					<input type="text" class="xiala_input edit_text" readonly name="" id="" value="JC034" />
+				</div>
+			</div>
+			<div class="content1_div">
+				<div class="left">
+					预警值：
+				</div>
+				<div class="right" style="position: relative;">
+					<input type="text" class="xiala_input edit_text" readonly name="" id="" value="80" />
+				</div>
+			</div>
+			<div class="content1_div">
+				<div class="left">
+					测点状态：
+				</div>
+				<div class="right" style="position: relative;">
+					<input type="text" class="xiala_input edit_text" readonly name="" id="" value="正常" />
+				</div>
+			</div>
+			<div class="content1_div">
+				<div class="left">
+					工点名称：
+				</div>
+				<div class="right" style="position: relative;">
+					<input type="text" class="xiala_input edit_text" readonly name="" id="" value="9号线1区间02段" />
+				</div>
+			</div>
+			<div class="content1_div">
+				<div class="left">
+					所属单位：
+				</div>
+				<div class="right" style="position: relative;">
+					<input type="text" class="xiala_input edit_text" readonly name="" id="" value="地铁五公司" />
+				</div>
+			</div>
+			<div class="content1_div" style="margin-top:15px;text-align: center;margin-left: 10px;">
+				<input type="button" class="button info" readonly name="" id="edit" value="编辑" />
+				<input type="button" class="button info" readonly name="" id="save" value="保存" />
+			</div>
+		</div>
 		
 
 		<!-- <div>
@@ -82,12 +156,14 @@
 		
 		
 	<script src="./data/data.js"></script>
+	<script src="./data/ztree_node.js"></script>
 	<script src="./js/main.js"></script>
 	<script src="./js/layercontrol.js"></script>
 	
 	<script src="./js/common.js"></script>
 	<script src="./js/createTileset.js"></script>
 	<script src="./js/monitore.js"></script>
+	<script src="./js/warning.js"></script>
 	<script src="./js/imagelayers.js"></script>
 	<script type="text/javascript">
 		//初始化图层构建

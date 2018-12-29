@@ -1,22 +1,136 @@
-//风险点监控
+// import { Z_BLOCK } from "zlib";
+
+//监测点
 var flagMonitor = false;
 var newMonitore;
 var addEntity;
 var jiance_bool = false;
-var positions = [];
-var position1 = Cesium.Cartesian3.fromDegrees(108.0744619, 34.0503706);
-var position2 = Cesium.Cartesian3.fromDegrees(108.0864619, 34.0503706);
-var position3 = Cesium.Cartesian3.fromDegrees(108.0984619, 34.0503706);
-positions.push(position1);
-positions.push(position2);
-positions.push(position3);
-var infos=[
-    {name:"监测点1",position:{longtitude:108.0744619, latitude:34.0503706}},
-    {name:"监测点2",position:{longtitude:108.0864619, latitude:34.0503706}},
-    {name:"监测点3",position:{longtitude:108.0984619, latitude:34.0503706}}
-];
+var jiancedian_infoDiv = ""
 
-function monitore(infos) {
+var positions = [];
+var array_status = [];
+var jiancedian_info = [
+    { name: "监测点1", position: { longtitude: 108.0744619, latitude: 34.0503706 }, status: "red" },
+    { name: "监测点2", position: { longtitude: 108.0864619, latitude: 34.0503706 }, status: "yellow" },
+    { name: "监测点3", position: { longtitude: 108.0984619, latitude: 34.0503706 }, status: "orange" }
+];
+for (let i = 0; i < jiancedian_info.length; i++) {
+    let position = Cesium.Cartesian3.fromDegrees(jiancedian_info[i].position.longtitude,jiancedian_info[i].position.latitude);
+    positions.push(position);
+    array_status.push(jiancedian_info[i].status);
+}
+var jiancedianTreeNodes = [
+    {
+        id: 1,
+        url: "",
+        open: true,
+        layer3dtype: "yujin",
+        name: "黄色预警",
+        caption: "yujin01",
+        visible: false,
+        children:
+            [
+                {
+                    id: 1 - 1,
+                    pId: 1,
+                    name: "监测点1",
+                    pst: { longtitude: 108.0744619, latitude: 34.0503706 },
+                    isChild: true,
+                    status: "yellow"
+                },
+                {
+                    id: 1 - 2,
+                    pId: 1,
+                    name: "监测点2",
+                    pst: { longtitude: 108.0764619, latitude: 34.0503706 },
+                    isChild: true,
+                    status: "yellow"
+                },
+                {
+                    id: 1 - 3,
+                    pId: 1,
+                    name: "监测点3",
+                    pst: { longtitude: 108.0784619, latitude: 34.0503706 },
+                    isChild: true,
+                    status: "yellow"
+                }
+            ]
+    }, {
+        id: 2,
+        url: "",
+        open: true,
+        layer3dtype: "ImageFileLayer",
+        name: "橙色预警",
+        caption: "yujin02",
+        visible: false,
+        children:
+            [
+                {
+                    id: 2 - 1,
+                    pId: 2,
+                    name: "监测点4",
+                    pst: { longtitude: 108.0748619, latitude: 34.0403706 },
+                    isChild: true,
+                    status: "orange"
+                },
+                {
+                    id: 2 - 2,
+                    pId: 2,
+                    name: "监测点5",
+                    pst: { longtitude: 108.0768619, latitude: 34.0403706 },
+                    isChild: true,
+                    status: "orange"
+                },
+                {
+                    id: 2 - 3,
+                    pId: 2,
+                    name: "监测点6",
+                    pst: { longtitude: 108.0788619, latitude: 34.0403706 },
+                    isChild: true,
+                    status: "orange"
+                }
+            ]
+    }, {
+        id: 3,
+        url: "",
+        open: true,
+        layer3dtype: "ImageFileLayer",
+        name: "红色预警",
+        caption: "yujin03",
+        visible: false,
+        children:
+            [
+                {
+                    id: 3 - 1,
+                    pId: 3,
+                    name: "监测点7",
+                    pst: { longtitude: 108.0748619, latitude: 34.0403706 },
+                    isChild: true,
+                    status: "orange"
+                },
+                {
+                    id: 3 - 2,
+                    pId: 3,
+                    name: "监测点8",
+                    pst: { longtitude: 108.0768619, latitude: 34.0403706 },
+                    isChild: true,
+                    status: "orange"
+                },
+                {
+                    id: 3 - 3,
+                    pId: 3,
+                    name: "监测点9",
+                    pst: { longtitude: 108.0788619, latitude: 34.0403706 },
+                    isChild: true,
+                    status: "orange"
+                }
+            ]
+    }
+]
+
+
+
+function monitore(jiancedian_info) {
     //save current id
     var currentId = -1;
     //save entities ids
@@ -48,8 +162,6 @@ function monitore(infos) {
         this.entities.show = true;
     }
 
-
-
     //add some symbol and label which can be cliked,and show in the scene.
     if (!viewer) {
         return;
@@ -66,7 +178,7 @@ function monitore(infos) {
 						+'Your browser does not support the <code>video</code> element.'
             +'</video>';
             document.getElementById("video").append(str_html); */
-        let addEntity = addBillboard(undefined, i, positions[i]);
+        let addEntity = addBillboard(undefined, i, positions[i], array_status[i]);
         let id = addEntity.id;
         this.ids.push(id);
         this.entities.add(addEntity);
@@ -83,7 +195,7 @@ function monitore(infos) {
         "https://cesiumjs.org/videos/Sandcastle/big-buck-bunny_trailer.mp4"];
 
     var handlerEntity = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
-    
+
     handlerEntity.setInputAction(function (movement) {
         var videos = videoUrls;
         var pickedObject = scene.pick(movement.position);
@@ -94,10 +206,12 @@ function monitore(infos) {
             if (!Cesium.defined(pickedObject.id._position))
                 return;
             // currentId = parseInt(pickedObject.id.name);//?????获取id号
-            
-           
+
+
         }
     }, Cesium.ScreenSpaceEventType.LEFT_DOWN);
+
+
 
     //增加billboard 实体
     /* 参数：
@@ -106,10 +220,22 @@ function monitore(infos) {
     
     返回： billboards数组 entitycollection对象
      */
-    function addBillboard(billboards, id, position) {
+    function addBillboard(billboards, id, position, status) {
         if (!Cesium.defined(billboards)) {
             // Create a billboard collection with two billboards
             var billboards = viewer.entities.add(new Cesium.BillboardCollection());
+        }
+        let imgUrl = 'images/Cesium_Logo_Color_Overlay.png';
+        switch (status) {
+            case "red":
+                imgUrl = 'images/img/red-warning.png';
+                break;
+            case "orange":
+                imgUrl = 'images/img/orange-warning.png';
+                break;
+            case "yellow":
+                imgUrl = 'images/img/yellow-warning.png';
+                break;
         }
         var addEntity = viewer.entities.add({
             name: '' + id + "号监测点",
@@ -119,10 +245,18 @@ function monitore(infos) {
                 show: true,
                 scale: 1.0,
                 sizeInMeters: true,
-                image: './images/Cesium_Logo_overlay.png',
+                image: imgUrl,
                 distanceDisplayCondition: 3000
             }
         });
+        var billboard = addEntity.billboard;
+        billboard._blinkInterval = setInterval(function(){
+            if(billboard.show==false){
+                billboard.show=true;
+            }else{
+                billboard.show=false;
+            }
+        },250);
         return addEntity;
         /*  billboards.add({
              name : '检测点'+id,    
@@ -158,14 +292,14 @@ function monitore(infos) {
          return billboards; */
     }
 
-    this.showMonitore = function() {
+    this.showMonitore = function () {
         if (document.getElementById("monitore")) {
             // alert("popupWin");
-            if($("#monitore").is(':visible')){
+            if ($("#monitore").is(':visible')) {
                 $("#monitore").hide(500);
                 $("#popupWin").show(500);//显示图层控制
                 return;
-            }else{
+            } else {
                 $("#popupWin").hide(500);//隐藏图层控制
                 $("#monitore").show(500);
                 return;
@@ -185,77 +319,58 @@ function monitore(infos) {
             $("#monitore").html(str);
             $("#popupWin").hide(500);//隐藏图层控制
         }
-        
+
     }
-    
-    this.createMonitoreList = function (infos) {
-        var monitoreInfos = infos;
+
+    this.createMonitoreList = function (jiancedian_info) {
+        var monitoreInfos = jiancedian_info;
         var setting = {
-            view : {
-                dblClickExpand : false,
-                showLine : false,
-                showIcon : false,
-                selectedMulti : false
-            	},
+            view: {
+                dblClickExpand: false,
+                showLine: false,
+                showIcon: false,
+                selectedMulti: false
+            },
             edit: {
                 enable: true,
-                showRenameBtn:false,
+                showRenameBtn: false,
                 showRemoveBtn: false//setRemoveBtn
             },
-            check : {
-                enable : true
+            check: {
+                enable: true
             },
-            data : {
-                simpleData : {
-                    enable : true
+            data: {
+                simpleData: {
+                    enable: true
                 }
             },
-            callback : {
-                onCheck : zTreeOnCheck,
-                onClick : zTreeOnClick,
+            callback: {
+                onCheck: zTreeOnCheck,
+                onClick: zTreeOnClick,
             }
         };
 
         //监测点 单击实现定位
         function zTreeOnClick(event, treeId, treeNode) {
-            var position =treeNode.position;
+            if (!treeNode.isChild)
+                return;
+            var position = treeNode.pst;
             viewer.camera.flyTo({
-                destination : Cesium.Cartesian3.fromDegrees(position.longtitude, position.latitude, 500.0)
+                destination: Cesium.Cartesian3.fromDegrees(position.longtitude, position.latitude, 500.0)
             });
-        }
-
-        if (monitoreInfos) {
-            {
-                var treeNodes = [];// 清空
-                var rnode1 = {};
-                rnode1.id = 0;
-                rnode1.name = "BIM";
-                rnode1.open = true;
-                rnode1.checked = false;
-                rnode1.isChild = false;
-                rnode1.chkDisabled=true;
-                treeNodes.push(rnode1);
-            
-                var length = monitoreInfos.length;
-                for (var i = 0; i < length; i++) {
-                    var node = {};
-                    node.id = i + 4;
-                    node.pId = 0;
-                    node.name = monitoreInfos[i].name;
-                    node.position = monitoreInfos[i].position;
-                    node.isChild = true;
-                    if(node&&node.id){
-                        treeNodes.push(node);
-                    }
-                };
-                
-                $.fn.zTree.init($("#treeMointoreList"), setting, treeNodes);
+            if (false) {
+                //update
+            } else {
+                //show
+                $("#monitore").hide();//隐藏列表
+                $("#jiancedian_infoDiv").css("display","block");
             }
         }
+        $.fn.zTree.init($("#treeMointoreList"), setting, jiancedianTreeNodes);
+
     }
-    
-    // return this;
 }
+
 //先创建节点，然后再绑定树
 $("<div id='monitore'></div>").addClass("monitore").appendTo($("#cesiumContainer"));
 // $("#monitore").css("display", "block");
@@ -271,36 +386,142 @@ str += '</div></div>';
 $("#monitore").html(str);
 $("#monitore").hide();//初始化隐藏
 newMonitore = new monitore(positions);
-newMonitore.createMonitoreList(infos);
+newMonitore.createMonitoreList(jiancedian_info);
 
-// 更新单个GeometryInstance的属性
-  var circleInstance = new Cesium.GeometryInstance({
-            geometry: new Cesium.CircleGeometry({
-                center: Cesium.Cartesian3.fromDegrees(107.20, 30.55),
-                radius: 250000.0,
-                vertexFormat: Cesium.PerInstanceColorAppearance.VERTEX_FORMAT
-            }),
-            attributes: {
-                color: Cesium.ColorGeometryInstanceAttribute.fromColor(
-                new Cesium.Color(1.0, 0.0, 0.0, 0.5)),
-                show: new Cesium.ShowGeometryInstanceAttribute(true) //显示或者隐藏
-            },
-            id: 'circle'
-        });
-        var primitive = new Cesium.Primitive({
-            geometryInstances: circleInstance,
-            appearance: new Cesium.PerInstanceColorAppearance({
-                translucent: false,
-                closed: true
-            })
-        });
-        viewer.scene.primitives.add(primitive);
-        //定期修改颜色
-        setInterval(function () {
-            //获取某个实例的属性集
-            var attributes = primitive.getGeometryInstanceAttributes('circle');
-            attributes.color = Cesium.ColorGeometryInstanceAttribute.toValue(
-            Cesium.Color.fromRandom({
-                alpha: 1.0
-            }));
-        }, 2000);
+//下拉选项框
+var xialakuang = $(".xialaan");
+    var right_select = $(".right_select");
+    var xiala_div = $(".xiala_div")
+    for (var i = 0; i < xialakuang.length; i++) {
+      xialakuang[i].index = i;
+      var onOff = true;
+      var This = i;
+      xialakuang[i].onclick = function () {
+        if (onOff) {
+          for (var j = 0; j < xiala_div.length; j++) {
+            if (this.index == j) {
+              xiala_div[j].style.display = 'block';
+              var xiala_input = xiala_div[j].getElementsByClassName("xiala_input");
+              if (j == 0) {
+                for (var k = 0; k < xiala_input.length; k++) {
+                  xiala_input[k].index = k;
+                  xiala_input[k].onclick = function () {
+                    var value = xiala_input[this.index].value;
+                    right_select[0].value = value;
+                    $(".xiala_div").css("display", "none")
+                  }
+                }
+              }
+              if (j == 1) {
+                for (var k = 0; k < xiala_input.length; k++) {
+                  xiala_input[k].index = k;
+                  xiala_input[k].onclick = function () {
+                    var value = xiala_input[this.index].value;
+                    right_select[1].value = value;
+                    $(".xiala_div").css("display", "none")
+                  }
+                }
+              }
+              if (j == 2) {
+                for (var k = 0; k < xiala_input.length; k++) {
+                  xiala_input[k].index = k;
+                  xiala_input[k].onclick = function () {
+                    var value = xiala_input[this.index].value;
+                    right_select[2].value = value;
+                    $(".xiala_div").css("display", "none")
+                  }
+                }
+              }
+            } else {
+              xiala_div[j].style.display = 'none';
+            }
+          }
+        } else {
+          $(".xiala_div").css("display", "none")
+        }
+        onOff = !onOff
+      }
+    }
+    for (var i = 0; i < right_select.length; i++) {
+      right_select[i].index = i;
+      var onOff = true;
+      var This = i;
+      right_select[i].onclick = function () {
+        if (onOff) {
+          for (var j = 0; j < xiala_div.length; j++) {
+            if (this.index == j) {
+              xiala_div[j].style.display = 'block';
+              var xiala_input = xiala_div[j].getElementsByClassName("xiala_input");
+              if (j == 0) {
+                for (var k = 0; k < xiala_input.length; k++) {
+                  xiala_input[k].index = k;
+                  xiala_input[k].onclick = function () {
+                    var value = xiala_input[this.index].value;
+                    right_select[0].value = value;
+                    $(".xiala_div").css("display", "none")
+                  }
+                }
+              }
+              if (j == 1) {
+                for (var k = 0; k < xiala_input.length; k++) {
+                  xiala_input[k].index = k;
+                  xiala_input[k].onclick = function () {
+                    var value = xiala_input[this.index].value;
+                    right_select[1].value = value;
+                    $(".xiala_div").css("display", "none")
+                  }
+                }
+              }
+              if (j == 2) {
+                for (var k = 0; k < xiala_input.length; k++) {
+                  xiala_input[k].index = k;
+                  xiala_input[k].onclick = function () {
+                    var value = xiala_input[this.index].value;
+                    right_select[2].value = value;
+                    $(".xiala_div").css("display", "none")
+                  }
+                }
+              }
+            } else {
+              xiala_div[j].style.display = 'none';
+            }
+          }
+        } else {
+          $(".xiala_div").css("display", "none")
+        }
+        onOff = !onOff
+      }
+    }
+    $("#edit").click(function(){
+        var edit_text = $(".edit_text");
+        if(edit_text[0].readOnly == true){
+            for (var i = 0; i < edit_text.length; i++) {
+                edit_text[i].readOnly=false;
+            }
+        }else{
+            for (var i = 0; i < edit_text.length; i++) {
+                edit_text[i].readOnly=true;
+            }
+        }        
+    });
+
+    $("#jiancedian_infoClose").click(function(){
+        $("#jiancedian_infoDiv").hide();
+        // if(document.getElementById("monitore").display == "none"){
+            $("#monitore").show();
+        // }        
+    });
+    //  let imgUrl = 'images/Cesium_Logo_Color_Overlay.png';
+    //  let position =positions[0];debugger;
+    // var addEntity = viewer.entities.add({
+    //     name: "1号监测点",
+    //     position: position,
+    //     billboard: {
+    //         id: "id",
+    //         show: true,
+    //         // scale: 1.0,
+    //         // sizeInMeters: true,
+    //         image: imgUrl,
+    //         distanceDisplayCondition: 3000
+    //     }
+    // });

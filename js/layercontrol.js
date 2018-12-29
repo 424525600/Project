@@ -2,7 +2,7 @@
 
 function getLayersInfoCompleted(getLayersInfoEventArgs) {
 	
-	if (getLayersInfoEventArgs) {
+	/* if (getLayersInfoEventArgs) {
 		{
 			treeNodes = [];// 清空
 			handleTreeData(getLayersInfoEventArgs);
@@ -13,6 +13,18 @@ function getLayersInfoCompleted(getLayersInfoEventArgs) {
 			zTree = $.fn.zTree.getZTreeObj("tree");
 			rMenu = $("#rMenu");
 			setLayerStatus();// 初始化的时候就要根据勾选来加载图层
+		}
+	} */
+	if (zNodes) {
+		{
+			showWindow();
+			$("#popupWin").css("display", "block");//初始化时隐藏图层控制
+			$.fn.zTree.init($("#tree"), setting, zNodes);
+			zTree = $.fn.zTree.getZTreeObj("tree");
+			rMenu = $("#rMenu");
+			setLayerStatus();// 初始化的时候就要根据勾选来加载图层
+			let yingXiangNode = zTree.getNodeByParam("name","天地图",null);
+			zTreeOnCheck(null, null, yingXiangNode);//勾选影像图层
 		}
 	}
 	// createTempLayer();
@@ -165,7 +177,7 @@ function handleTreeData(data) {
 
 	rnode3.id = 3;
 	rnode3.pId = 0;
-	rnode3.name = "大类3";
+	rnode3.name = "预警分类";
 	rnode3.open = true;
 	rnode3.checked = false;
 	rnode3.isChild = false;
@@ -203,7 +215,21 @@ function handleTreeData(data) {
 			node.layerID = 2 + "." + i;
 			node.tileset = null;
 			// node.entity =loadModel(modelUrl);
-		} 
+		}
+		else if (layers[i].layer3dtype == "ImageFileLayer") {
+			node.id = i + 4;
+			node.pId = 2;
+			node.name = layers[i].name;
+			node.url =layers[i].url;
+			node.layer3dtype = layers[i].layer3dtype;
+			if (layers[i].checked|| layers[i].checked== "true") {
+				node.checked = true;
+			}
+			node.isChild = true;
+			node.layerID = 2 + "." + i;
+			node.tileset = null;
+			// node.entity =loadModel(modelUrl);
+		}  
 		if(node&&node.pId){
 			treeNodes.push(node);
 		}

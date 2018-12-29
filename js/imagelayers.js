@@ -28,7 +28,7 @@ var GridImagery = new Cesium.GridImageryProvider();
 //四：TileCoordinatesImageryProvider
 // var TileCoordinatesImagery = new Cesium.TileCoordinatesImageryProvider();
 var TileCoordinatesImagery = Cesium.createTileMapServiceImageryProvider({
-    url: './maps/taile/tiles'
+    url: 'http://localhost:8080/maps/taile/tiles'
 });
 var imageryLayers = viewer.imageryLayers;
 imageryLayers.removeAll();

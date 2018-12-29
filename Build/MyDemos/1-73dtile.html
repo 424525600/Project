@@ -115,15 +115,15 @@ Object.defineProperties(Cesium.Model.prototype, {
         }
     }, Cesium.ScreenSpaceEventType.LEFT_DOWN); 
 
-
-    var tileset = new Cesium.Cesium3DTileset({ url: "../../data/result2/tileset.json" });
+    // http://localhost:8080/maps/result2/tileset.json
+    var tileset = new Cesium.Cesium3DTileset({ url: "http://localhost:8080/maps/result2/tileset.json" });
     viewer.scene.primitives.add(tileset);
     viewer.zoomTo(tileset);
     // debugger;
     tileset.readyPromise.then(function (tileset) {
             var cartographic = Cesium.Cartographic.fromCartesian(tileset.boundingSphere.center);
             var surface = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, 0.0);
-            var offset = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, -0);
+            var offset = Cesium.Cartesian3.fromRadians(cartographic.longitude, cartographic.latitude, -65);
             var translation = Cesium.Cartesian3.subtract(offset, surface, new Cesium.Cartesian3());
             tileset.modelMatrix = Cesium.Matrix4.fromTranslation(translation);
         }).otherwise(function (error) {

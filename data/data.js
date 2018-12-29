@@ -1,5 +1,5 @@
 var resu = [{
-    url:Cesium.IonResource.fromAssetId(5743),
+    url:Cesium.IonResource.fromAssetId(8564),
     // url:'http://localhost:8080/Project/SampleData/Cesium3DTiles/Instanced/InstancedOrientation/tileset.json',
     layer3dtype:"3dtile",
     name:"小类模型1-1",
